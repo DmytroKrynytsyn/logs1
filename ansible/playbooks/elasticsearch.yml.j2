@@ -1,0 +1,15 @@
+# Elasticsearch configuration file
+
+cluster.name: {{ es_cluster_name }}
+node.name: {{ es_node_name }}
+network.host: {{ es_network_host }}
+
+# For single-node setup
+discovery.type: single-node
+
+# Path settings
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+
+# Memory and performance settings
+bootstrap.memory_lock: true

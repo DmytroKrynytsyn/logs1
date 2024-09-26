@@ -1,0 +1,47 @@
+---
+- name: Install and configure Elasticsearch single node
+  hosts: all
+  become: yes
+  vars:
+    es_version: "7.x"  # Specify Elasticsearch version
+    es_cluster_name: "my-cluster"
+    es_node_name: "node-1"
+    es_network_host: "0.0.0.0"  # Listen on all interfaces
+
+  tasks:
+  
+    - name: Add Elasticsearch YUM repository
+      ansible.builtin.yum_repository:
+        name: elasticsearch
+        description: Elasticsearch repository
+        baseurl: https://artifacts.elastic.co/packages/{{ es_version }}/yum
+        gpgcheck: yes
+        gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        enabled: yes
+
+    - name: Install Elasticsearch
+      ansible.builtin.yum:
+        name: elasticsearch
+        state: present
+
+    - name: Configure Elasticsearch for single node
+      ansible.builtin.template:
+        src: elasticsearch.yml.j2
+        dest: /etc/elasticsearch/elasticsearch.yml
+        owner: elasticsearch
+        group: elasticsearch
+        mode: '0644'
+        notify:
+          - restart elasticsearch
+
+    - name: Ensure Elasticsearch service is started and enabled
+      ansible.builtin.systemd:
+        name: elasticsearch
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: restart elasticsearch
+      ansible.builtin.systemd:
+        name: elasticsearch
+        state: restarted
