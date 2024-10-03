@@ -1,16 +1,12 @@
 ---
 - name: Common for all
   hosts: all
-  become: yes
-
+  become: true
   tasks:
     - name: Initial update yum cache
       yum:
-        update_cache: yes
-
+        update_cache: true
     - name: Add initial dependencies
       yum:
-        name: 
-          - sysstat
-          - tree
+        name: [sysstat, tree]
         state: present
