@@ -30,24 +30,24 @@ def get_private_ip_by_role(role: str) -> str:
 def main():
 
     inventory = {
-        'node': {
-            'hosts': [get_public_ip_by_role('node')], 
+        'elasticsearch': {
+            'hosts': [get_public_ip_by_role('elasticsearch')], 
             'vars': { 'ansible_user': 'ec2-user','ansible_ssh_private_key_file': './cks.pem', 'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'}
         },
         'fluentd': {
-            'hosts': [get_public_ip_by_role('fluentd')], 
+            'hosts': [get_public_ip_by_role('fluentd')],  
             'vars': { 'ansible_user': 'ec2-user','ansible_ssh_private_key_file': './cks.pem', 'ansible_ssh_common_args': '-o StrictHostKeyChecking=no', 
-                      'node_ip': get_private_ip_by_role('node')}
+                      'elasticsearch_ip': get_private_ip_by_role('elasticsearch')}
         },
-        'elasticsearch': {
+        'node': {
             'hosts': [get_public_ip_by_role('elasticsearch')], 
             'vars': { 'ansible_user': 'ec2-user','ansible_ssh_private_key_file': './cks.pem', 'ansible_ssh_common_args': '-o StrictHostKeyChecking=no', 
-                      'node_ip': get_private_ip_by_role('node')}
+                      'fluentd_ip': get_private_ip_by_role('fluentd')}
         },
         'kibana': {
             'hosts': [get_public_ip_by_role('kibana')], 
             'vars': { 'ansible_user': 'ec2-user','ansible_ssh_private_key_file': './cks.pem', 'ansible_ssh_common_args': '-o StrictHostKeyChecking=no', 
-                      'prometheus_ip': get_private_ip_by_role('prometheus')}
+                      'elasticsearch_ip': get_private_ip_by_role('elasticsearch')}
         }
     }
 

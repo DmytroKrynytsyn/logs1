@@ -9,7 +9,6 @@
     es_network_host: "0.0.0.0"  # Listen on all interfaces
 
   tasks:
-  
     - name: Add Elasticsearch YUM repository
       ansible.builtin.yum_repository:
         name: elasticsearch

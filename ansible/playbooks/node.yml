@@ -1,9 +1,20 @@
 ---
-- name: Install Node Exporter on Linux Servers
+- name: Install Fluent Bit on Linux Servers
   hosts: node
   become: true
+  vars:
+    fluentd_host: "{{ hostvars[inventory_hostname]['fluentd_ip'] }}" # Replace with Fluentd aggregator EC2 IP
+    fluentd_port: "24224"
+    fluentbit_version: "1.9.4"
 
   tasks:
+    - name: Install dependencies (Amazon Linux 2)
+      ansible.builtin.yum:
+        name:
+          - wget
+          - systemd
+        state: present
+
     - name: Create YUM repository configuration for Fluent Bit
       ansible.builtin.yum_repository:
         name: fluent-bit
@@ -24,3 +35,36 @@
         enabled: true
         state: started
 
+    - name: Configure Fluent Bit to read system logs and send them to Fluentd
+      ansible.builtin.copy:
+        dest: /etc/td-agent-bit/td-agent-bit.conf
+        content: |
+          [SERVICE]
+              Flush        1
+              Log_Level    info
+              Daemon       off
+              Parsers_File parsers.conf
+
+          [INPUT]
+              Name         systemd
+              Tag          host.*
+
+          [FILTER]
+              Name         modify
+              Match        *
+              Add          hostname ${HOSTNAME}
+
+          [OUTPUT]
+              Name         forward
+              Match        *
+              Host         {{ fluentd_host }}
+              Port         {{ fluentd_port }}
+              Retry_Limit  False
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Restart Fluent Bit to apply configuration
+      ansible.builtin.systemd:
+        name: td-agent-bit
+        state: restarted
