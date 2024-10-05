@@ -1,7 +1,7 @@
 ---
 - name: Install Fluentd
   hosts: fluentd
-  become: yes
+  become: true
   vars:
     elasticsearch_host: "{{ hostvars[inventory_hostname]['elasticsearch_ip'] }}" # Replace with the Elasticsearch IP
     elasticsearch_port: "9200"
