@@ -13,39 +13,25 @@
         name: "{{ item }}"
         state: present
       loop:
-        - curl
         - tar
         - gcc
         - gcc-c++
         - make
 
-    - name: Add td-agent (Fluentd) repository
-      ansible.builtin.yum_repository:
-        name: treasure-data
-        description: Treasure Data Repository
-        baseurl: http://packages.treasuredata.com/4/redhat/$releasever/$basearch
-        gpgcheck: yes
-        gpgkey: https://packages.treasuredata.com/GPG-KEY-td-agent
-        enabled: yes
+
+    - name: Install Fluentd using the Treasure Data script
+      ansible.builtin.shell: >
+        curl -fsSL https://toolbelt.treasuredata.com/sh/install-amazon2023-fluent-package5-lts.sh | sh
 
     - name: Install Fluentd (td-agent)
       ansible.builtin.yum:
         name: td-agent
         state: present
 
-    - name: Install Fluentd plugin for Elasticsearch
-      ansible.builtin.command:
-        cmd: /usr/sbin/td-agent-gem install fluent-plugin-elasticsearch
-
-    - name: Create Fluentd configuration directory
-      ansible.builtin.file:
-        path: /etc/td-agent/conf.d
-        state: directory
-        mode: '0755'
 
     - name: Configure Fluentd to accept logs from Fluent Bit and forward to Elasticsearch
       ansible.builtin.copy:
-        dest: /etc/td-agent/td-agent.conf
+        dest: /etc/fluent/fluentd.conf
         content: |
           # Fluentd configuration to accept logs from Fluent Bit and forward to Elasticsearch
           <source>
@@ -53,7 +39,6 @@
             port {{ fluentd_port }}
             bind 0.0.0.0
           </source>
-
           <match **>
             @type elasticsearch
             host {{ elasticsearch_host }}
@@ -63,14 +48,10 @@
             type_name fluentd
             logstash_prefix fluentd
           </match>
-
-        owner: td-agent
-        group: td-agent
         mode: '0644'
 
     - name: Start and enable Fluentd (td-agent) service
       ansible.builtin.systemd:
-        name: td-agent
-        enabled: yes
+        name: fluentd
+        enabled: true
         state: started
-

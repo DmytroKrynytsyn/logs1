@@ -20,9 +20,27 @@ resource "aws_security_group" "web_sg" {
   }
 
   ingress {
+    description = "kibana"
+    from_port   = 5601
+    to_port     = 5601
+    protocol    = "tcp"
+    self        = true
+    cidr_blocks = [var.my_ip]
+  }
+
+  ingress {
     description = "fluentd"
-    from_port   = 18080
-    to_port     = 18080
+    from_port   = 24224
+    to_port     = 24224
+    protocol    = "tcp"
+    self        = true
+    cidr_blocks = [var.my_ip]
+  }
+
+  ingress {
+    description = "elasticsearch"
+    from_port   = 9200
+    to_port     = 9200
     protocol    = "tcp"
     self        = true
     cidr_blocks = [var.my_ip]
@@ -74,7 +92,7 @@ resource "aws_instance" "kibana" {
 
 resource "aws_instance" "elasticsearch" {
   ami           = var.ami_id
-  instance_type = var.instance_type
+  instance_type = var.instance_type_big
   security_groups = [aws_security_group.web_sg.name]
 
   key_name = "cks"

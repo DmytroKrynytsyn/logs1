@@ -1,22 +1,17 @@
 ---
 - name: Install Kibana
   hosts: kibana
-  become: yes
+  become: true
 
   tasks:
-    - name: Install Kibana GPG key
-      ansible.builtin.yum:
-        name: https://artifacts.elastic.co/GPG-KEY-elasticsearch
-        state: present
-
     - name: Add Kibana repository
       ansible.builtin.yum_repository:
-        name: elastic-7.x
-        description: "Elastic repository for 7.x packages"
-        baseurl: https://artifacts.elastic.co/packages/7.x/yum
-        gpgcheck: yes
+        description: kibana repo
+        name: kibana.repo
+        baseurl: https://artifacts.elastic.co/packages/8.x/yum
+        gpgcheck: true
         gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
-        enabled: yes
+        enabled: true
 
     - name: Install Kibana
       ansible.builtin.yum:
@@ -37,7 +32,7 @@
     - name: Enable and start Kibana service
       ansible.builtin.systemd:
         name: kibana
-        enabled: yes
+        enabled: true
         state: started
 
   handlers:

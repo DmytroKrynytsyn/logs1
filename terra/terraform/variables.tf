@@ -14,6 +14,11 @@ variable "instance_type" {
   description = "The instance type to use for the EC2 instance."
 }
 
+variable "instance_type_big" {
+  description = "The instance type to use for the BIG EC2 instance."
+}
+
+
 variable "my_ip" {
   description = "The CIDR allowed to access the instance."
   default     = "89.247.166.175/32"  # Replace with your actual IP address

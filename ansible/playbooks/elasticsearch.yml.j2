@@ -1,5 +1,9 @@
 # Elasticsearch configuration file
 
+xpack.security.enabled: false
+xpack.security.transport.ssl.enabled: false
+xpack.security.http.ssl.enabled: false
+
 cluster.name: {{ es_cluster_name }}
 node.name: {{ es_node_name }}
 network.host: {{ es_network_host }}

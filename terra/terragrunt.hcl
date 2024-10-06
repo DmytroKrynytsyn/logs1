@@ -7,4 +7,5 @@ inputs = {
   availability_zone = "eu-central-1a"
   ami_id            = "ami-00060fac2f8c42d30"
   instance_type     = "t2.micro"
+  instance_type_big = "t2.large"
 }

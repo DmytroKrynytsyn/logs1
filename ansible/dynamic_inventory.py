@@ -40,7 +40,7 @@ def main():
                       'elasticsearch_ip': get_private_ip_by_role('elasticsearch')}
         },
         'node': {
-            'hosts': [get_public_ip_by_role('elasticsearch')], 
+            'hosts': [get_public_ip_by_role('node')], 
             'vars': { 'ansible_user': 'ec2-user','ansible_ssh_private_key_file': './cks.pem', 'ansible_ssh_common_args': '-o StrictHostKeyChecking=no', 
                       'fluentd_ip': get_private_ip_by_role('fluentd')}
         },
