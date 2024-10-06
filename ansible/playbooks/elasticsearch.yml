@@ -1,6 +1,6 @@
 ---
 - name: Install and configure Elasticsearch single node
-  hosts: all
+  hosts: elasticsearch
   become: yes
   vars:
     es_version: "7.x"  # Specify Elasticsearch version

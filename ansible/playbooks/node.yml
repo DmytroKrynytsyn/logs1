@@ -3,7 +3,7 @@
   hosts: node
   become: true
   vars:
-    fluentd_host: "{{ hostvars[inventory_hostname]['fluentd_ip'] }}" # Replace with Fluentd aggregator EC2 IP
+    fluentd_host: "{{ hostvars[inventory_hostname]['fluentd_ip'] }}"
     fluentd_port: "24224"
     fluentbit_version: "1.9.4"
 
