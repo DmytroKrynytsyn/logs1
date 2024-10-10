@@ -21,5 +21,5 @@ variable "instance_type_big" {
 
 variable "my_ip" {
   description = "The CIDR allowed to access the instance."
-  default     = "89.247.166.175/32"  # Replace with your actual IP address
+  default     = "84.170.240.186/32"  # Replace with your actual IP address
 }

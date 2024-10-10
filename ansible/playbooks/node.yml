@@ -37,13 +37,13 @@
 
     - name: Ensure /etc/td-agent-bit directory exists
       ansible.builtin.file:
-        path: /etc/td-agent-bit
+        path: /etc/fluent-bit sfl
         state: directory
         mode: '0755'
 
     - name: Configure Fluent Bit to read system logs and send them to Fluentd
       ansible.builtin.copy:
-        dest: /etc/td-agent-bit/td-agent-bit.conf
+        dest: /etc/fluent-bit/fluent-bit.conf
         content: |
           [SERVICE]
               Flush        1

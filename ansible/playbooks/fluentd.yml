@@ -33,12 +33,14 @@
       ansible.builtin.copy:
         dest: /etc/fluent/fluentd.conf
         content: |
-          # Fluentd configuration to accept logs from Fluent Bit and forward to Elasticsearch
           <source>
             @type forward
             port {{ fluentd_port }}
             bind 0.0.0.0
           </source>
+          # <match **>
+          #   @type stdout
+          # </match>
           <match **>
             @type elasticsearch
             host {{ elasticsearch_host }}
